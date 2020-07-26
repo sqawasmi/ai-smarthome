@@ -1,0 +1,14 @@
+cvconf:
+    #video: rtsp://admin:admin@192.168.4.104:554/h264_stream
+    #video: rtsp://admin:admin@192.168.4.103:80/live/0/h264.sdp
+    video: /home/shaker/2020-07-26-23-39-03.jpg
+    plugin: hacv.CVMQTTPlugin
+
+hacv:
+    host: 192.168.4.4
+    name: garage_entrance_cv
+    username: admin
+    password: admin
+    mqtt_motion: ha/motion/mqtt
+    mqtt_camera: ha/camera/mqtt
+    mqtt_tts: ha/tts/mqtt
