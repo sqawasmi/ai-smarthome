@@ -100,14 +100,11 @@ if video_path == "0":
    video_path = 0
 
 # load image
+print(video_path)
 image = cv2.imread(video_path)
 image_h, image_w, _ = image.shape
 net_h, net_w = 416, 416
 new_image = preprocess_input(image, net_h, net_w)
-
-# create the plugin
-cls = getattr(importlib.import_module(plugin[0]), plugin[1])
-ha_detect = cls(yaml_cfg)
 
 detection = yolo.detect(image)
 
@@ -121,11 +118,13 @@ if len(detection) > 0:
     max_score = detection[0][1]
     detect_name = detection[0][0]
 else:
-    max_score = 0
-print("current max score %d", max_score)
+    sys.exit(0)
 # only publish if score is higher than zero
 if max_score > 0:
     print("*** Detected ", detect_name)
+    # create the plugin
+    cls = getattr(importlib.import_module(plugin[0]), plugin[1])
+    ha_detect = cls(yaml_cfg)
     ha_detect.publish_detection(detect_name, max_score)
     ha_detect.publish_detections(detection)
     ha_detect.publish_image(cv2.imencode('.png', image)[1].tostring())
@@ -136,5 +135,4 @@ if show:
 if save_to_disk:
     file = 'yolo-' + detect_name + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png"
     cv2.imwrite(file, image)
-
 sys.exit(0)
