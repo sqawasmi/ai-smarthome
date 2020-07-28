@@ -126,7 +126,7 @@ if max_score > 0:
     cls = getattr(importlib.import_module(plugin[0]), plugin[1])
     ha_detect = cls(yaml_cfg)
     ha_detect.publish_detection(detect_name, max_score)
-    ha_detect.publish_detections(detection)
+    ha_detect.publish_detections(detection, cv2.imencode('.png', image)[1].tobytes())
     ha_detect.publish_image(cv2.imencode('.png', image)[1].tostring())
     ha_detect.__del__()
 # show the image and save detection disk

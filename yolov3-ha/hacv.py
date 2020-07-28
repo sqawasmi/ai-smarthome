@@ -10,6 +10,7 @@
 
 import paho.mqtt.client as mqttClient
 import threading, time, yaml, json
+import base64
 
 debug_enable = 0
 def debug(*arg):
@@ -68,12 +69,12 @@ class CVMQTTPlugin:
         debug("publishing motion OFF");
         self.client.publish(self.mqtt_motion, '{"on":"OFF"}')
 
-    def publish_detections(self, detections):
+    def publish_detections(self, detections, image):
         if self.client == None:
             return
         print("Detections", json.dumps({'detections':detections}))
-        self.client.publish(self.mqtt_detections, json.dumps({'detections':detections}))
-
+        image_as_text = base64.b64encode(image).decode('utf-8')
+        self.client.publish(self.mqtt_detections, json.dumps({'detections': detections, 'image': image_as_text}))
 
     def publish_detection(self, detection_type, likelihood):
         if self.client == None:
